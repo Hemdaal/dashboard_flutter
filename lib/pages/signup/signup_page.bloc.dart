@@ -5,17 +5,19 @@ import 'package:hemdaal_ui_flutter/models/user.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
-class LoginPageBloc extends Bloc {
+class SignupPageBloc extends Bloc {
   final _userController = StreamController<Fetch<User>>();
   final System _system;
 
-  LoginPageBloc({System? system}) : _system = system ?? System();
+  SignupPageBloc({System? system}) : _system = system ?? System();
 
   Stream<Fetch<User>> getUserStream() => _userController.stream;
 
-  login(String email, String password) {
+  signup(String name, String email, String password) async {
     _userController.sink.add(Fetch.setFetching());
-    _system.login(email, password).then((value) => _userController.sink.add(Fetch.setContent(value)), onError: () => _userController.sink.add(Fetch.setError()));
+    _system.register(name, email, password).then(
+        (value) => _userController.sink.add(Fetch.setContent(value)),
+        onError: (error) => _userController.sink.add(Fetch.setError(error)));
   }
 
   @override

@@ -14,19 +14,26 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _bloc.getUser();
     return BlocProvider(bloc: _bloc, child: _render(context));
   }
 
   Widget _render(BuildContext context) {
-    _bloc.getUser();
-    return StreamBuilder<Fetch<User>>(
-        stream: _bloc.getUserStream(),
-        builder: (context, snapshot) {
-          WidgetsBinding.instance?.addPostFrameCallback((_) {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => LoginPage()));
-          });
-          return CircularProgressIndicator();
-        });
+    return Scaffold(
+        body: Center(
+      child: StreamBuilder<Fetch<User>>(
+          stream: _bloc.getUserStream(),
+          builder: (context, snapshot) {
+            if (snapshot.data?.isSuccess() == true) {
+              //Go to dashboard or create project.
+            } else {
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              });
+            }
+            return CircularProgressIndicator();
+          }),
+    ));
   }
 }

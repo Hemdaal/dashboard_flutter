@@ -9,7 +9,13 @@ class GraphQLClientProvider {
     final preference = await SharedPreferences.getInstance();
 
     final _authLink = AuthLink(
-      getToken: () async => 'Bearer ${preference.getString('token')}',
+      getToken: () async {
+        if (preference.containsKey('token')) {
+          return 'Bearer ${preference.getString('token')}';
+        } else {
+          return '';
+        }
+      },
     );
 
     Link _link = _authLink.concat(_httpLink);

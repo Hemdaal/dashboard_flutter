@@ -15,4 +15,8 @@ class System {
   Future<User> login(String email, String password) async {
     return _userAdapter.login(email, password);
   }
+
+  Future<User> register(String name, String email, String password) async {
+    return _userAdapter.register(name, email, password);
+  }
 }
