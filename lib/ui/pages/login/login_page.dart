@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hemdaal_ui_flutter/models/user.dart';
-import 'package:hemdaal_ui_flutter/pages/projects/projects_page.dart';
-import 'package:hemdaal_ui_flutter/pages/signup/signup_page.dart';
+import 'package:hemdaal_ui_flutter/ui/pages/projects/projects_page.dart';
+import 'package:hemdaal_ui_flutter/ui/pages/signup/signup_page.dart';
+import 'package:hemdaal_ui_flutter/utils/bloc.dart';
+import 'package:hemdaal_ui_flutter/utils/extensions.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
 import 'login_page.bloc.dart';
@@ -18,24 +19,35 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(bloc: _bloc, child: _render(context));
+  }
+
+  Widget _render(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: Icon(Icons.menu),
+          title: Text('Login')
+        ),
         body: Center(
-      child: StreamBuilder<Fetch<User>>(
-          stream: _bloc.getUserStream(),
-          builder: (context, snapshot) {
-            if (snapshot.data?.isSuccess() == true) {
-              WidgetsBinding.instance?.addPostFrameCallback((_) {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => ProjectsPage()));
-              });
-            } else if (snapshot.data?.isLoading() == true) {
-              return CircularProgressIndicator();
-            } else {
-              return _getLoginForm(context);
-            }
-            return CircularProgressIndicator();
-          }),
-    ));
+          child: StreamBuilder<Fetch<User>>(
+              stream: _bloc.getUserStream(),
+              builder: (context, snapshot) {
+                if (snapshot.data?.isSuccess() == true) {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) =>
+                            ProjectsPage(snapshot.getContent())));
+                  });
+                  return CircularProgressIndicator();
+                } else if (snapshot.data?.isError() == true) {
+                  return _getLoginForm(context);
+                } else if (snapshot.data?.isLoading() == true) {
+                  return CircularProgressIndicator();
+                } else {
+                  return _getLoginForm(context);
+                }
+              }),
+        ));
   }
 
   Widget _getLoginForm(BuildContext context) {

@@ -13,9 +13,11 @@ class LoginPageBloc extends Bloc {
 
   Stream<Fetch<User>> getUserStream() => _userController.stream;
 
-  login(String email, String password) {
-    _userController.sink.add(Fetch.setFetching());
-    _system.login(email, password).then((value) => _userController.sink.add(Fetch.setContent(value)), onError: () => _userController.sink.add(Fetch.setError()));
+  void login(String email, String password) {
+    _userController.add(Fetch.setFetching());
+    _system.login(email, password).then(
+        (value) => _userController.add(Fetch.setContent(value)),
+        onError: (error) => _userController.add(Fetch.setError(error)));
   }
 
   @override

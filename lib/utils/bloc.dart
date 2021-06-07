@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 abstract class Bloc {
+  void init() {}
 
   void dispose();
 }
@@ -17,11 +18,14 @@ class BlocProvider<T extends Bloc> extends StatefulWidget {
 }
 
 class _BlocProviderState extends State<BlocProvider> {
-  // 4
+  @override
+  void initState() {
+    widget.bloc.init();
+  }
+
   @override
   Widget build(BuildContext context) => widget.child;
 
-  // 5
   @override
   void dispose() {
     widget.bloc.dispose();

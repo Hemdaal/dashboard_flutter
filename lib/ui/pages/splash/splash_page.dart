@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hemdaal_ui_flutter/models/user.dart';
-import 'package:hemdaal_ui_flutter/pages/login/login_page.dart';
-import 'package:hemdaal_ui_flutter/pages/splash/splash_page.bloc.dart';
+import 'package:hemdaal_ui_flutter/ui/pages/login/login_page.dart';
+import 'package:hemdaal_ui_flutter/ui/pages/projects/projects_page.dart';
+import 'package:hemdaal_ui_flutter/ui/pages/splash/splash_page.bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
+import 'package:hemdaal_ui_flutter/utils/extensions.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
 class SplashPage extends StatelessWidget {
@@ -14,7 +16,6 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _bloc.getUser();
     return BlocProvider(bloc: _bloc, child: _render(context));
   }
 
@@ -25,8 +26,11 @@ class SplashPage extends StatelessWidget {
           stream: _bloc.getUserStream(),
           builder: (context, snapshot) {
             if (snapshot.data?.isSuccess() == true) {
-              //Go to dashboard or create project.
-            } else {
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => ProjectsPage(snapshot.getContent())));
+              });
+            } else if (snapshot.data?.isError() == true) {
               WidgetsBinding.instance?.addPostFrameCallback((_) {
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => LoginPage()));

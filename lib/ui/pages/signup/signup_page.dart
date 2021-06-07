@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hemdaal_ui_flutter/models/user.dart';
-import 'package:hemdaal_ui_flutter/pages/projects/projects_page.dart';
+import 'package:hemdaal_ui_flutter/ui/pages/projects/projects_page.dart';
+import 'package:hemdaal_ui_flutter/utils/bloc.dart';
+import 'package:hemdaal_ui_flutter/utils/extensions.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
 import 'signup_page.bloc.dart';
@@ -18,14 +19,25 @@ class SignupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(bloc: _bloc, child: _render(context));
+  }
+
+  Widget _render(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: Icon(Icons.menu),
+          title: Text('Signup')
+        ),
         body: Center(
             child: StreamBuilder<Fetch<User>>(
                 stream: _bloc.getUserStream(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data?.isSuccess() == true) {
-                    _navigateToProjectsPage(context);
+                  if (snapshot.data?.isSuccess() == true) {
+                    _navigateToProjectsPage(context, snapshot.getContent());
                     return CircularProgressIndicator();
+                  } else if (snapshot.data?.isError() == true) {
+                    //Also show error
+                    return _getSignupForm(context);
                   } else if (snapshot.data?.isLoading() == true) {
                     return CircularProgressIndicator();
                   } else {
@@ -34,10 +46,10 @@ class SignupPage extends StatelessWidget {
                 })));
   }
 
-  void _navigateToProjectsPage(BuildContext context) {
+  void _navigateToProjectsPage(BuildContext context, User user) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => ProjectsPage()));
+          MaterialPageRoute(builder: (context) => ProjectsPage(user)));
     });
   }
 

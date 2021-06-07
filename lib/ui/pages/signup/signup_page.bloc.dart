@@ -11,13 +11,15 @@ class SignupPageBloc extends Bloc {
 
   SignupPageBloc({System? system}) : _system = system ?? System();
 
-  Stream<Fetch<User>> getUserStream() => _userController.stream;
+  getUserStream() => _userController.stream;
 
-  signup(String name, String email, String password) async {
-    _userController.sink.add(Fetch.setFetching());
+  _getUserSink() => _userController.sink;
+
+  void signup(String name, String email, String password) {
+    _userController.add(Fetch.setFetching());
     _system.register(name, email, password).then(
-        (value) => _userController.sink.add(Fetch.setContent(value)),
-        onError: (error) => _userController.sink.add(Fetch.setError(error)));
+        (value) => _getUserSink().add(Fetch.setContent(value)),
+        onError: (error) => _getUserSink().addError(error));
   }
 
   @override
