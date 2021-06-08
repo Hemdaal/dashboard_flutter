@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.0"
+    version: "2.6.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -56,7 +56,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -70,14 +70,14 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.2"
   file:
     dependency: transitive
     description:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "6.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -106,56 +106,56 @@ packages:
       name: gql
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.0-nullsafety.2"
+    version: "0.13.0"
   gql_dedupe_link:
     dependency: transitive
     description:
       name: gql_dedupe_link
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-nullsafety.1"
+    version: "2.0.0"
   gql_error_link:
     dependency: transitive
     description:
       name: gql_error_link
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0-nullsafety.1"
+    version: "0.2.0"
   gql_exec:
     dependency: transitive
     description:
       name: gql_exec
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0-nullsafety.2"
+    version: "0.3.0"
   gql_http_link:
     dependency: transitive
     description:
       name: gql_http_link
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0-nullsafety.1"
+    version: "0.4.0"
   gql_link:
     dependency: transitive
     description:
       name: gql_link
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0-nullsafety.3"
+    version: "0.4.0"
   gql_transform_link:
     dependency: transitive
     description:
       name: gql_transform_link
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0-nullsafety.1"
+    version: "0.2.0"
   graphql:
     dependency: "direct main"
     description:
       name: graphql
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-nullsafety.4"
+    version: "5.0.0"
   hive:
     dependency: transitive
     description:
@@ -169,7 +169,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.2"
+    version: "0.13.3"
   http_parser:
     dependency: transitive
     description:
@@ -211,7 +211,7 @@ packages:
       name: normalize
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.1-0.1.nullsafety.0"
+    version: "0.5.3"
   path:
     dependency: transitive
     description:
@@ -281,7 +281,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.6"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -328,7 +328,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0"
+    version: "1.8.1"
   stack_trace:
     dependency: transitive
     description:
@@ -363,7 +363,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.19"
+    version: "0.3.0"
   typed_data:
     dependency: transitive
     description:
@@ -391,14 +391,14 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   win32:
     dependency: transitive
     description:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.1.4"
   xdg_directories:
     dependency: transitive
     description:
@@ -407,5 +407,5 @@ packages:
     source: hosted
     version: "0.2.0"
 sdks:
-  dart: ">=2.12.0 <3.0.0"
+  dart: ">=2.13.0 <3.0.0"
   flutter: ">=1.20.0"

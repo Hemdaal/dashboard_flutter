@@ -1,3 +1,5 @@
+import 'package:hemdaal_ui_flutter/utils/console_log.dart';
+
 class Fetch<D> {
   dynamic? _fetchInfo;
   D? _content;
@@ -7,18 +9,21 @@ class Fetch<D> {
   Fetch(this._state);
 
   static Fetch<D> setFetching<D>([dynamic fetchInfo]) {
+    ConsoleLog.i('loading');
     final fetch = Fetch<D>(_FetchState.FETCHING);
     fetch._fetchInfo = fetchInfo;
     return fetch;
   }
 
   static Fetch<D> setError<D>([dynamic errorData]) {
+    ConsoleLog.e('error', errorData);
     final fetch = Fetch<D>(_FetchState.ERROR);
     fetch._error = errorData;
     return fetch;
   }
 
   static Fetch<D> setContent<D>(D contentData) {
+    ConsoleLog.i('content');
     final fetch = Fetch<D>(_FetchState.SUCCESS);
     fetch._content = contentData;
     return fetch;

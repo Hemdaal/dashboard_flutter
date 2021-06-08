@@ -5,6 +5,7 @@ import 'package:hemdaal_ui_flutter/ui/pages/login/login_page.dart';
 import 'package:hemdaal_ui_flutter/ui/pages/projects/projects_page.dart';
 import 'package:hemdaal_ui_flutter/ui/pages/splash/splash_page.bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
+import 'package:hemdaal_ui_flutter/utils/console_log.dart';
 import 'package:hemdaal_ui_flutter/utils/extensions.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
