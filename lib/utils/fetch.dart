@@ -9,7 +9,6 @@ class Fetch<D> {
   Fetch(this._state);
 
   static Fetch<D> setFetching<D>([dynamic fetchInfo]) {
-    ConsoleLog.i('loading');
     final fetch = Fetch<D>(_FetchState.FETCHING);
     fetch._fetchInfo = fetchInfo;
     return fetch;
@@ -23,7 +22,6 @@ class Fetch<D> {
   }
 
   static Fetch<D> setContent<D>(D contentData) {
-    ConsoleLog.i('content');
     final fetch = Fetch<D>(_FetchState.SUCCESS);
     fetch._content = contentData;
     return fetch;
@@ -43,7 +41,7 @@ class Fetch<D> {
 
   get content => _content!;
 
-  get fetching => _fetchInfo!;
+  get fetchingInfo => _fetchInfo!;
 
   get error => _error!;
 }

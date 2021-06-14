@@ -25,6 +25,6 @@ extension SmartSnapShot<T> on AsyncSnapshot<Fetch<T>> {
   }
 
   dynamic getLoading() {
-    return this.data!.fetching;
+    return this.data!.fetchingInfo;
   }
 }

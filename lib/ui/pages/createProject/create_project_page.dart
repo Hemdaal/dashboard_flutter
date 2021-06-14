@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hemdaal_ui_flutter/models/projectcreator/create_project_info.dart';
-import 'package:hemdaal_ui_flutter/models/projectcreator/create_software_info.dart';
 import 'package:hemdaal_ui_flutter/models/user.dart';
+import 'package:hemdaal_ui_flutter/ui/pages/createProject/add_software_widget.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
+import 'package:hemdaal_ui_flutter/utils/console_log.dart';
 
 import 'create_project_bloc.dart';
 
@@ -46,16 +47,15 @@ class CreateProjectPage extends StatelessWidget {
                             padding: EdgeInsets.all(8.0),
                             child: TextFormField(
                               onChanged: (name) => {
-                                  createProjectInfo.name = name,
-                                  _bloc.update(createProjectInfo)
+                                createProjectInfo.name = name,
+                                _bloc.update(createProjectInfo)
                               },
                               initialValue: createProjectInfo.name,
                               decoration: InputDecoration(
                                   hintText: 'Project Name',
                                   border: OutlineInputBorder()),
                             )),
-                        _showSoftwareComponents(
-                            createProjectInfo.getSoftwareInfos()),
+                        _showSoftwareComponents(createProjectInfo),
                         OutlinedButton.icon(
                           onPressed: () {
                             createProjectInfo.addSoftwareComponent();
@@ -65,7 +65,7 @@ class CreateProjectPage extends StatelessWidget {
                           label: Text("Add Software"),
                         ),
                         ElevatedButton.icon(
-                          onPressed: () => {},
+                          onPressed: _onCreateProject(snapshot.data!),
                           label: Text('Create'),
                           icon: Icon(Icons.add, size: 18),
                         )
@@ -75,24 +75,28 @@ class CreateProjectPage extends StatelessWidget {
         ));
   }
 
-  Widget _showSoftwareComponents(List<CreateSoftwareInfo> softwareInfos) {
+  Widget _showSoftwareComponents(
+    CreateProjectInfo createProjectInfo,
+  ) {
     List<Widget> widgets = List.empty(growable: true);
 
-    softwareInfos.forEach((element) {
-      widgets.add(Row(children: [
-        Checkbox(
-            value: element.isCodeManagementEnabled(),
-            onChanged: (enabled) => {
-                  if (enabled == true)
-                    {element.enableCodeManagement()}
-                  else
-                    {element.disableCodeManagement()}
-                })
-      ]));
+    createProjectInfo.getSoftwareInfos().forEach((element) {
+      widgets.add(AddSoftwareWidget(
+          element, (value) => {_bloc.update(createProjectInfo)}));
     });
 
     return Column(
       children: widgets,
     );
+  }
+
+  _onCreateProject(CreateProjectInfo data) {
+    if (data.isValid() && !data.isLoading()) {
+      return () => {
+        _bloc.createProject(data)
+      };
+    }
+
+    return null;
   }
 }

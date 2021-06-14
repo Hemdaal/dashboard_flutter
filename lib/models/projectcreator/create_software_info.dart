@@ -19,4 +19,8 @@ class CreateSoftwareInfo {
   void disableCodeManagement() {
     this._codeManagementInfo = null;
   }
+
+  bool isValid() {
+    return name?.isNotEmpty == true && _codeManagementInfo?.isValid() == true;
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:hemdaal_ui_flutter/adapters/project_adapter.dart';
+import 'package:hemdaal_ui_flutter/models/projectcreator/create_project_info.dart';
 
 import 'project.dart';
 
@@ -19,5 +20,14 @@ class User {
 
   Future<List<Project>> getProjects() {
     return _projectAdapter.getProjects();
+  }
+
+  Future<Project> createProject(CreateProjectInfo data) async {
+    final project = await _projectAdapter.createProject(data.name ?? '');
+    data.getSoftwareInfos().forEach((element) async {
+      await project.addSoftwareComponent(element);
+    });
+
+    return Future.value(project);
   }
 }
