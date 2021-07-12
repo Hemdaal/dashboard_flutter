@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hemdaal_ui_flutter/models/projectcreator/create_project_info.dart';
-import 'package:hemdaal_ui_flutter/models/user.dart';
 import 'package:hemdaal_ui_flutter/ui/pages/createProject/add_software_widget.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/console_log.dart';
@@ -9,10 +8,11 @@ import 'package:hemdaal_ui_flutter/utils/console_log.dart';
 import 'create_project_bloc.dart';
 
 class CreateProjectPage extends StatelessWidget {
+  static const String route = '/projects/create';
+
   final CreateProjectBloc _bloc;
 
-  CreateProjectPage({CreateProjectBloc? createProjectBloc})
-      : _bloc = createProjectBloc ?? CreateProjectBloc();
+  CreateProjectPage({CreateProjectBloc? createProjectBloc}) : _bloc = createProjectBloc ?? CreateProjectBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +20,8 @@ class CreateProjectPage extends StatelessWidget {
   }
 
   Widget _render(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           leading: Icon(Icons.menu),
@@ -36,41 +38,51 @@ class CreateProjectPage extends StatelessWidget {
                   return Text('Loading');
                 }
                 CreateProjectInfo createProjectInfo = snapshot.data!;
-                return SizedBox(
-                    width: 400,
-                    child: Form(
-                        child: Column(
-                      children: [
-                        Text('Create Project',
-                            style: Theme.of(context).textTheme.headline4),
-                        Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              onChanged: (name) => {
-                                createProjectInfo.name = name,
-                                _bloc.update(createProjectInfo)
-                              },
-                              initialValue: createProjectInfo.name,
-                              decoration: InputDecoration(
-                                  hintText: 'Project Name',
-                                  border: OutlineInputBorder()),
-                            )),
-                        _showSoftwareComponents(createProjectInfo),
-                        OutlinedButton.icon(
-                          onPressed: () {
-                            createProjectInfo.addSoftwareComponent();
-                            _bloc.update(createProjectInfo);
-                          },
-                          icon: Icon(Icons.add, size: 18),
-                          label: Text("Add Software"),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: _onCreateProject(snapshot.data!),
-                          label: Text('Create'),
-                          icon: Icon(Icons.add, size: 18),
-                        )
-                      ],
-                    )));
+                return SingleChildScrollView(
+                    child: SizedBox(
+                        width: screenSize.width * 1 / 4,
+                        child: Form(
+                            key: formKey,
+                            child: Column(
+                              children: [
+                                Padding(padding: EdgeInsets.all(16.0)),
+                                Text('Create Project', style: Theme.of(context).textTheme.headline4),
+                                Padding(padding: EdgeInsets.all(16.0)),
+                                TextFormField(
+                                  onChanged: (name) => {createProjectInfo.name = name, _bloc.update(createProjectInfo)},
+                                  initialValue: createProjectInfo.name,
+                                  validator: (value) {
+                                    if (value?.isEmpty == true) {
+                                      return 'Enter project name';
+                                    }
+
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(hintText: 'Project Name', border: OutlineInputBorder()),
+                                ),
+                                Padding(padding: EdgeInsets.all(16.0)),
+                                _showSoftwareComponents(createProjectInfo),
+                                Padding(padding: EdgeInsets.all(16.0)),
+                                OutlinedButton.icon(
+                                  onPressed: () {
+                                    createProjectInfo.addSoftwareComponent();
+                                    _bloc.update(createProjectInfo);
+                                  },
+                                  icon: Icon(Icons.add, size: 18),
+                                  label: Text("Add Software"),
+                                ),
+                                Padding(padding: EdgeInsets.all(16.0)),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      _onCreateProject(snapshot.data!);
+                                    }
+                                  },
+                                  label: Text('Create'),
+                                  icon: Icon(Icons.add, size: 18),
+                                )
+                              ],
+                            ))));
               }),
         ));
   }
@@ -81,8 +93,8 @@ class CreateProjectPage extends StatelessWidget {
     List<Widget> widgets = List.empty(growable: true);
 
     createProjectInfo.getSoftwareInfos().forEach((element) {
-      widgets.add(AddSoftwareWidget(
-          element, (value) => {_bloc.update(createProjectInfo)}));
+      widgets.add(AddSoftwareWidget(element, (value) => {_bloc.update(createProjectInfo)}));
+      widgets.add(Padding(padding: EdgeInsets.all(8.0)));
     });
 
     return Column(
@@ -92,11 +104,7 @@ class CreateProjectPage extends StatelessWidget {
 
   _onCreateProject(CreateProjectInfo data) {
     if (data.isValid() && !data.isLoading()) {
-      return () => {
-        _bloc.createProject(data)
-      };
+        _bloc.createProject(data);
     }
-
-    return null;
   }
 }

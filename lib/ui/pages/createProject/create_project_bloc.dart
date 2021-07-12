@@ -44,14 +44,12 @@ class CreateProjectBloc extends Bloc {
                   .createProject(data)
                   .then((value) => {
                         _createProjectInfo.setProjectCreated(value.id),
-                        _createProjectStreamController.sink
-                            .add(_createProjectInfo)
+                        _createProjectStreamController.sink.add(_createProjectInfo)
                       })
                   .onError((error, stackTrace) => {
                         ConsoleLog.i('error'),
                         _createProjectInfo.setError(error),
-                        _createProjectStreamController.sink
-                            .add(_createProjectInfo)
+                        _createProjectStreamController.sink.add(_createProjectInfo)
                       })
             })
         .onError((error, stackTrace) => {

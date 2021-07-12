@@ -45,6 +45,7 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _getLoginForm(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     var screenSize = MediaQuery.of(context).size;
     return SizedBox(
       width: screenSize.width * 1/4,
@@ -63,6 +64,7 @@ class LoginPage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: TextFormField(
+                obscureText: true,
                 obscuringCharacter: '*',
                 controller: _passwordFieldController,
                 decoration: InputDecoration(

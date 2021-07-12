@@ -1,7 +1,6 @@
 import 'package:graphql/client.dart';
 import 'package:hemdaal_ui_flutter/adapters/base_adapter.dart';
 import 'package:hemdaal_ui_flutter/models/user.dart';
-import 'package:hemdaal_ui_flutter/utils/console_log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAdapter extends BaseNetworkAdapter {

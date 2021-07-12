@@ -51,9 +51,9 @@ class SignupPage extends StatelessWidget {
 
   Widget _getSignupForm(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-
+    var screenSize = MediaQuery.of(context).size;
     return SizedBox(
-      width: 400,
+      width: screenSize.width * 1/4,
       child: Form(
         key: _formKey,
         child: Column(
