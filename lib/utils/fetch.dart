@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hemdaal_ui_flutter/utils/console_log.dart';
 
 class Fetch<D> {
@@ -15,7 +16,7 @@ class Fetch<D> {
   }
 
   static Fetch<D> setError<D>([dynamic errorData]) {
-    ConsoleLog.e('error', errorData);
+    ConsoleLog.w('error', errorData);
     final fetch = Fetch<D>(_FetchState.ERROR);
     fetch._error = errorData;
     return fetch;
@@ -25,6 +26,16 @@ class Fetch<D> {
     final fetch = Fetch<D>(_FetchState.SUCCESS);
     fetch._content = contentData;
     return fetch;
+  }
+
+  static Fetch<D> fromSnapShot<D>(AsyncSnapshot<Fetch<D>> snapshot) {
+    if (snapshot.hasData) {
+      return snapshot.data ?? Fetch.setFetching();
+    } else if (snapshot.hasError) {
+      return Fetch.setError(snapshot.error);
+    } else {
+      return Fetch.setFetching();
+    }
   }
 
   bool isSuccess() {

@@ -21,7 +21,7 @@ class SoftwareComponent {
   Future<void> update(CreateSoftwareInfo element) async {
     if (element.isCodeManagementEnabled()) {
       final createCodeManagementInfo = element.getCodeManagementInfo()!;
-      await _softwareAdapter.addCodeManagement(id, createCodeManagementInfo.gitTool!.name!, createCodeManagementInfo.gitUrl!, createCodeManagementInfo.gitAccessToken);
+      await _softwareAdapter.addCodeManagement(id, createCodeManagementInfo.gitTool!.name, createCodeManagementInfo.gitUrl!, createCodeManagementInfo.gitAccessToken);
     } else {
       await _softwareAdapter.removeCodeManagement(id);
     }

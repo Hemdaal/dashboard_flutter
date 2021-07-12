@@ -1,7 +1,15 @@
 import 'package:logger/logger.dart';
 
 class ConsoleLog {
-  static Logger _logger = new Logger();
+  static Logger _logger = new Logger(
+    printer: PrettyPrinter(
+        methodCount: 3,
+        errorMethodCount: 8,
+        lineLength: 120,
+        colors: true,
+        printEmojis: true,
+        printTime: false),
+  );
 
   static i(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     _logger.i(message, error, stackTrace);

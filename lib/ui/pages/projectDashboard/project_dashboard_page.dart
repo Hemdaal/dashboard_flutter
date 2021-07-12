@@ -6,22 +6,19 @@ import 'package:hemdaal_ui_flutter/utils/bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/extensions.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
-import 'projects_page.bloc.dart';
+import 'project_dashboard_page.bloc.dart';
 
-class ProjectsPage extends StatelessWidget {
-
-  static const String route = '/projects';
-
+class ProjectDashboardPage extends StatelessWidget {
   final TextEditingController emailFieldController = TextEditingController();
   final TextEditingController passwordFieldController = TextEditingController();
-  final ProjectsPageBloc _bloc;
+  final ProjectDashboardPageBloc _bloc;
 
-  ProjectsPage({ProjectsPageBloc? projectsPageBloc})
-      :this._bloc = projectsPageBloc ?? ProjectsPageBloc();
+  ProjectDashboardPage(int projectId,
+      {ProjectDashboardPageBloc? projectsPageBloc})
+      : this._bloc = projectsPageBloc ?? ProjectDashboardPageBloc(projectId);
 
   @override
   Widget build(BuildContext context) {
-    _bloc.getProjects();
     return BlocProvider(bloc: _bloc, child: _render(context));
   }
 
@@ -37,7 +34,7 @@ class ProjectsPage extends StatelessWidget {
       ),
       body: Center(
         child: StreamBuilder<Fetch<List<Project>>>(
-          stream: _bloc.getUserStream(),
+          stream: _bloc.getProjectStream(),
           builder: (context, snapshot) {
             if (snapshot.data?.isSuccess() == true) {
               return _showProjects(context, snapshot.getContent());

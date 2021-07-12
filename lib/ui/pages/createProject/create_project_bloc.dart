@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:hemdaal_ui_flutter/models/project.dart';
 import 'package:hemdaal_ui_flutter/models/projectcreator/create_project_info.dart';
-import 'package:hemdaal_ui_flutter/models/user.dart';
+import 'package:hemdaal_ui_flutter/models/system.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/console_log.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
@@ -10,10 +10,10 @@ import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 class CreateProjectBloc extends Bloc {
   final _projectStreamController = StreamController<Fetch<Project>>();
   final _createProjectStreamController = StreamController<CreateProjectInfo>();
-  final User _user;
+  final System _system;
   CreateProjectInfo _createProjectInfo = CreateProjectInfo();
 
-  CreateProjectBloc(this._user);
+  CreateProjectBloc({System? system}) : _system = system ?? System();
 
   Stream<Fetch<Project>> getProjectStream() => _projectStreamController.stream;
 
@@ -36,15 +36,27 @@ class CreateProjectBloc extends Bloc {
   createProject(CreateProjectInfo data) {
     _createProjectInfo.setCreating();
     _createProjectStreamController.sink.add(_createProjectInfo);
-    this._user.createProject(data).then((value) =>
-    {
-      _createProjectInfo.setProjectCreated(value.id),
-      _createProjectStreamController.sink.add(_createProjectInfo)
-    }).onError((error, stackTrace) =>
-    {
-      ConsoleLog.i('error'),
-      _createProjectInfo.setError(error),
-      _createProjectStreamController.sink.add(_createProjectInfo)
-    });
+    this
+        ._system
+        .getUser()
+        .then((user) => {
+              user
+                  .createProject(data)
+                  .then((value) => {
+                        _createProjectInfo.setProjectCreated(value.id),
+                        _createProjectStreamController.sink
+                            .add(_createProjectInfo)
+                      })
+                  .onError((error, stackTrace) => {
+                        ConsoleLog.i('error'),
+                        _createProjectInfo.setError(error),
+                        _createProjectStreamController.sink
+                            .add(_createProjectInfo)
+                      })
+            })
+        .onError((error, stackTrace) => {
+              ConsoleLog.i('error'),
+              _createProjectInfo.setError(error),
+            });
   }
 }

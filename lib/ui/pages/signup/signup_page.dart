@@ -8,14 +8,15 @@ import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 import 'signup_page.bloc.dart';
 
 class SignupPage extends StatelessWidget {
+  static const String route = '/register';
+
   final TextEditingController _nameFieldController = TextEditingController();
   final TextEditingController _emailFieldController = TextEditingController();
-  final TextEditingController _passwordFieldController =
-      TextEditingController();
+  final TextEditingController _passwordFieldController = TextEditingController();
+
   final SignupPageBloc _bloc;
 
-  SignupPage({SignupPageBloc? signupPageBloc})
-      : this._bloc = signupPageBloc ?? SignupPageBloc();
+  SignupPage({SignupPageBloc? signupPageBloc}) : this._bloc = signupPageBloc ?? SignupPageBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +25,6 @@ class SignupPage extends StatelessWidget {
 
   Widget _render(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: Icon(Icons.menu),
-          title: Text('Signup')
-        ),
         body: Center(
             child: StreamBuilder<Fetch<User>>(
                 stream: _bloc.getUserStream(),
@@ -48,15 +45,17 @@ class SignupPage extends StatelessWidget {
 
   void _navigateToProjectsPage(BuildContext context, User user) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => ProjectsPage(user)));
+      Navigator.of(context).pushNamed(ProjectsPage.route);
     });
   }
 
   Widget _getSignupForm(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+
     return SizedBox(
       width: 400,
       child: Form(
+        key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -65,38 +64,58 @@ class SignupPage extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: _nameFieldController,
-                decoration: InputDecoration(
-                    hintText: 'Name', border: OutlineInputBorder()),
+                validator: (value) {
+                  if (value?.isEmpty == true) {
+                    return 'Enter Name';
+                  }
+
+                  return null;
+                },
+                decoration: InputDecoration(hintText: 'Name', border: OutlineInputBorder()),
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: _emailFieldController,
-                decoration: InputDecoration(
-                    hintText: 'Email', border: OutlineInputBorder()),
+                validator: (value) {
+                  if (value?.isEmpty == true) {
+                    return 'Enter Email address';
+                  }
+
+                  return null;
+                },
+                decoration: InputDecoration(hintText: 'Email', border: OutlineInputBorder()),
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: TextFormField(
                 obscuringCharacter: '*',
+                obscureText: true,
                 controller: _passwordFieldController,
+                validator: (value) {
+                  if (value?.isEmpty == true) {
+                    return 'Enter Password';
+                  }
+
+                  return null;
+                },
                 decoration: InputDecoration(
                   hintText: 'Password',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: () => {
-                _bloc.signup(
-                    _nameFieldController.value.text,
-                    _emailFieldController.value.text,
-                    _passwordFieldController.value.text)
+                if (_formKey.currentState!.validate())
+                  {
+                    _bloc.signup(_nameFieldController.value.text, _emailFieldController.value.text,
+                        _passwordFieldController.value.text)
+                  }
               },
-              label: Text('Signup'),
-              icon: Icon(Icons.login, size: 18),
+              child: Text('Signup'),
             )
           ],
         ),

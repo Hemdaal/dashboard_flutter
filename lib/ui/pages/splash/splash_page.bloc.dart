@@ -12,19 +12,17 @@ class SplashPageBloc extends Bloc {
 
   SplashPageBloc([System? system]) : this._system = system ?? System();
 
-  @override
-  void init() {
-    super.init();
-    _getUser();
+  get userStream {
+    return _userStreamController.stream;
   }
 
-  getUserStream() => _userStreamController.stream;
-
-  void _getUser() {
-    _userStreamController.add(Fetch.setFetching());
+  void getUser() {
+    _userStreamController.sink.add(Fetch.setFetching());
     _system.getUser().then(
         (value) => _userStreamController.sink.add(Fetch.setContent(value)),
-        onError: (error) => _userStreamController.sink.add(Fetch.setError(error)));
+        onError: (error) {
+      _userStreamController.sink.add(Fetch.setError(error));
+    });
   }
 
   @override

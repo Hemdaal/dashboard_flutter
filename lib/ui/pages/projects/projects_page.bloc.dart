@@ -1,29 +1,24 @@
 import 'dart:async';
 
 import 'package:hemdaal_ui_flutter/models/project.dart';
-import 'package:hemdaal_ui_flutter/models/user.dart';
+import 'package:hemdaal_ui_flutter/models/system.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
 class ProjectsPageBloc extends Bloc {
   final _projectListController = StreamController<Fetch<List<Project>>>();
-  final User _user;
+  final System _system;
 
-  ProjectsPageBloc(this._user);
+  ProjectsPageBloc({System? system}) : this._system = system ?? System();
 
   getUserStream() => _projectListController.stream;
 
-  @override
-  void init() {
-    getProjects();
-    super.init();
-  }
-
   void getProjects() {
     _projectListController.add(Fetch.setFetching());
-    _user.getProjects().then(
-        (value) => _projectListController.sink.add(Fetch.setContent(value)),
-        onError: (error) => _projectListController.sink.add(Fetch.setError(error)));
+    _system.getUser().then((user) => user.getProjects().then(
+            (value) => _projectListController.sink.add(Fetch.setContent(value)),
+        onError: (error) =>
+            _projectListController.sink.add(Fetch.setError(error))).onError((error, stackTrace) => null));
   }
 
   @override

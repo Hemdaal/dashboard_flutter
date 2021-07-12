@@ -11,8 +11,8 @@ import 'create_project_bloc.dart';
 class CreateProjectPage extends StatelessWidget {
   final CreateProjectBloc _bloc;
 
-  CreateProjectPage(User user, {CreateProjectBloc? createProjectBloc})
-      : _bloc = createProjectBloc ?? CreateProjectBloc(user);
+  CreateProjectPage({CreateProjectBloc? createProjectBloc})
+      : _bloc = createProjectBloc ?? CreateProjectBloc();
 
   @override
   Widget build(BuildContext context) {

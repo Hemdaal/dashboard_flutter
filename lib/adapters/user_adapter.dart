@@ -1,6 +1,7 @@
 import 'package:graphql/client.dart';
 import 'package:hemdaal_ui_flutter/adapters/base_adapter.dart';
 import 'package:hemdaal_ui_flutter/models/user.dart';
+import 'package:hemdaal_ui_flutter/utils/console_log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAdapter extends BaseNetworkAdapter {
@@ -49,11 +50,10 @@ class UserAdapter extends BaseNetworkAdapter {
 
   Future<User> getUser() async {
     final QueryOptions options = QueryOptions(document: gql(_user));
-
     final QueryResult result = await query(options);
 
     if (result.hasException) {
-      return Future.error(result.exception!);
+      throw result.exception ?? Exception();
     } else {
       return User.fromJson(result.data!['user']);
     }

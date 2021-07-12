@@ -15,11 +15,18 @@ class BlocProvider<T extends Bloc> extends StatefulWidget {
 
   @override
   State createState() => _BlocProviderState();
+
+  static T of<T extends Bloc>(BuildContext context) {
+    final BlocProvider<T>? provider =
+        context.findAncestorWidgetOfExactType<BlocProvider<T>>();
+    return provider!.bloc;
+  }
 }
 
 class _BlocProviderState extends State<BlocProvider> {
   @override
   void initState() {
+    super.initState();
     widget.bloc.init();
   }
 
