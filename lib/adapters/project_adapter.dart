@@ -14,6 +14,17 @@ class ProjectAdapter extends BaseNetworkAdapter {
   }
   ''';
 
+  static const String _projectQuery = r'''
+  query GetProject($id: number!) {
+    user {
+      project(id: $id) {
+        id
+        name
+      }
+    }
+  }
+  ''';
+
   static const String _createProjectsQuery = r'''
   mutation createProject($name:String!) {
   user {
@@ -39,6 +50,20 @@ class ProjectAdapter extends BaseNetworkAdapter {
         projects.add(Project.fromJson(element));
       });
       return Future.value(projects);
+    }
+  }
+
+  Future<Project> getProject(int id) async {
+    final QueryOptions options = QueryOptions(document: gql(_projectQuery), variables: {'id': id});
+
+    final QueryResult result = await query(options);
+
+    if (result.hasException) {
+      return Future.error(result.exception!);
+    } else {
+      Map<String, dynamic> projectJson = result.data!['user']['project'];
+      Project project = Project.fromJson(projectJson);
+      return Future.value(project);
     }
   }
 

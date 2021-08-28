@@ -1,4 +1,5 @@
 import 'package:hemdaal_ui_flutter/adapters/project_adapter.dart';
+import 'package:hemdaal_ui_flutter/models/dashboard/project_dashboard.dart';
 import 'package:hemdaal_ui_flutter/models/projectcreator/create_project_info.dart';
 
 import 'project.dart';
@@ -8,8 +9,7 @@ class User {
   final String email;
   final ProjectAdapter _projectAdapter;
 
-  User(this.name, this.email, {ProjectAdapter? projectAdapter})
-      : _projectAdapter = projectAdapter ?? ProjectAdapter();
+  User(this.name, this.email, {ProjectAdapter? projectAdapter}) : _projectAdapter = projectAdapter ?? ProjectAdapter();
 
   User.fromJson(Map<String, dynamic> json, {ProjectAdapter? projectAdapter})
       : name = json['name'],
@@ -20,6 +20,14 @@ class User {
 
   Future<List<Project>> getProjects() {
     return _projectAdapter.getProjects();
+  }
+
+  Future<Project> getProject(int id) {
+    return _projectAdapter.getProject(id);
+  }
+
+  Future<ProjectDashboard> getDashboard(int projectId) async {
+    return (await _projectAdapter.getProject(projectId)).getDashboard();
   }
 
   Future<Project> createProject(CreateProjectInfo data) async {

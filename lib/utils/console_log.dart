@@ -6,9 +6,9 @@ class ConsoleLog {
         methodCount: 3,
         errorMethodCount: 8,
         lineLength: 120,
-        colors: true,
+        colors: false,
         printEmojis: true,
-        printTime: false),
+        printTime: true),
   );
 
   static i(dynamic message, [dynamic error, StackTrace? stackTrace]) {

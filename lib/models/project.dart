@@ -1,5 +1,6 @@
 import 'package:hemdaal_ui_flutter/adapters/software_adapter.dart';
 import 'package:hemdaal_ui_flutter/models/SoftwareComponent.dart';
+import 'package:hemdaal_ui_flutter/models/dashboard/project_dashboard.dart';
 import 'package:hemdaal_ui_flutter/models/projectcreator/create_software_info.dart';
 
 class Project {
@@ -22,5 +23,9 @@ class Project {
     SoftwareComponent softwareComponent = await _softwareAdapter.addSoftwareComponent(id, element.name ?? '');
     await softwareComponent.update(element);
     return softwareComponent;
+  }
+
+  ProjectDashboard getDashboard() {
+    return ProjectDashboard(id);
   }
 }
