@@ -15,7 +15,7 @@ class ProjectAdapter extends BaseNetworkAdapter {
   ''';
 
   static const String _projectQuery = r'''
-  query GetProject($id: number!) {
+  query GetProject($id: Long!) {
     user {
       project(id: $id) {
         id

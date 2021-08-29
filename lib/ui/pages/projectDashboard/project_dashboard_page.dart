@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hemdaal_ui_flutter/models/dashboard/widget/dashboard_widget.dart';
 import 'package:hemdaal_ui_flutter/models/dashboard/widget/dashboard_widget_type.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
+import 'package:hemdaal_ui_flutter/utils/extensions.dart';
+import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 
 import 'project_dashboard_page.bloc.dart';
 
@@ -12,8 +15,7 @@ class ProjectDashboardPage extends StatelessWidget {
 
   static bool isMatchingPath(String path) {
     var uri = Uri.parse(path);
-    return uri.pathSegments.length == 3 && uri.pathSegments[0] == 'projects' &&
-        uri.pathSegments[2] == 'dashboard';
+    return uri.pathSegments.length == 3 && uri.pathSegments[0] == 'projects' && uri.pathSegments[2] == 'dashboard';
   }
 
   static int? parseProjectId(String path) {
@@ -25,12 +27,12 @@ class ProjectDashboardPage extends StatelessWidget {
   final TextEditingController passwordFieldController = TextEditingController();
   final ProjectDashboardPageBloc _bloc;
 
-  ProjectDashboardPage(int projectId,
-      {ProjectDashboardPageBloc? projectsPageBloc})
+  ProjectDashboardPage(int projectId, {ProjectDashboardPageBloc? projectsPageBloc})
       : this._bloc = projectsPageBloc ?? ProjectDashboardPageBloc(projectId);
 
   @override
   Widget build(BuildContext context) {
+    _bloc.getDashboardWidgets();
     return BlocProvider(bloc: _bloc, child: _render(context));
   }
 
@@ -38,8 +40,17 @@ class ProjectDashboardPage extends StatelessWidget {
   Widget _render(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Project'),
-      ),
+          child: StreamBuilder<Fetch<List<DashboardWidget>>>(
+              stream: _bloc.getDashboardWidgetsStream(),
+              builder: (context, snapshot) {
+                if (snapshot.data?.isSuccess() == true) {
+                  return _showDashboardWidgets(context, snapshot.getContent());
+                } else if (snapshot.data?.isError() == true) {
+                  return _showFailure(context);
+                } else {
+                  return CircularProgressIndicator();
+                }
+              })),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -76,5 +87,24 @@ class ProjectDashboardPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget _showDashboardWidgets(BuildContext context, List<DashboardWidget> dashboardWidgets) {
+    if (dashboardWidgets.isEmpty) {
+      return Text('No widgets found');
+    } else {
+      final List<Widget> widgets = [];
+      dashboardWidgets.forEach((dashboard) {
+        widgets.add(ListTile(
+          title: Text(dashboard.type.name),
+          onTap: () => {Navigator.of(context).pushNamed(ProjectDashboardPage.createRoute(dashboard.id))},
+        ));
+      });
+      return SizedBox(width: 500, child: ListView(children: widgets, padding: const EdgeInsets.all(20.0)));
+    }
+  }
+
+  Widget _showFailure(BuildContext context) {
+    return TextButton(child: Text('Please try again'), onPressed: () => _bloc.getDashboardWidgets());
   }
 }
