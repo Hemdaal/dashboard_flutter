@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hemdaal_ui_flutter/models/dashboard/widget/dashboard_widget.dart';
 import 'package:hemdaal_ui_flutter/models/dashboard/widget/dashboard_widget_type.dart';
+import 'package:hemdaal_ui_flutter/ui/components/dashboardWidgets/dashboard_widget.component.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
 import 'package:hemdaal_ui_flutter/utils/extensions.dart';
 import 'package:hemdaal_ui_flutter/utils/fetch.dart';
@@ -40,8 +40,8 @@ class ProjectDashboardPage extends StatelessWidget {
   Widget _render(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: StreamBuilder<Fetch<List<DashboardWidget>>>(
-              stream: _bloc.getDashboardWidgetsStream(),
+          child: StreamBuilder<Fetch<List<int>>>(
+              stream: _bloc.getDashboardWidgetIdsStream(),
               builder: (context, snapshot) {
                 if (snapshot.data?.isSuccess() == true) {
                   return _showDashboardWidgets(context, snapshot.getContent());
@@ -89,18 +89,23 @@ class ProjectDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _showDashboardWidgets(BuildContext context, List<DashboardWidget> dashboardWidgets) {
-    if (dashboardWidgets.isEmpty) {
+  Widget _showDashboardWidgets(BuildContext context, List<int> dashboardWidgetIds) {
+    if (dashboardWidgetIds.isEmpty) {
       return Text('No widgets found');
     } else {
       final List<Widget> widgets = [];
-      dashboardWidgets.forEach((dashboard) {
-        widgets.add(ListTile(
-          title: Text(dashboard.type.name),
-          onTap: () => {Navigator.of(context).pushNamed(ProjectDashboardPage.createRoute(dashboard.id))},
-        ));
+      dashboardWidgetIds.forEach((widgetId) {
+        widgets.add(DashboardWidgetComponent(widgetId));
       });
-      return SizedBox(width: 500, child: ListView(children: widgets, padding: const EdgeInsets.all(20.0)));
+      return SizedBox(
+          width: 500,
+          child: GridView.count(
+              crossAxisCount: 3,
+              childAspectRatio: (2 / 1),
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+              children: widgets,
+              padding: const EdgeInsets.all(20.0)));
     }
   }
 

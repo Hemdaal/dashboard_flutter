@@ -16,11 +16,23 @@ class ProjectDashboardAdapter extends BaseNetworkAdapter {
 }
   ''';
 
-  static const String _getWidgetsQuery = r'''
+  static const String _getWidgetIdsQuery = r'''
   query getWidgets($projectId: Long!) {
   user {
     projectDashboard(projectId: $projectId) {
-      widgets() {
+      widgets {
+        id
+      }
+    }
+  }
+}
+  ''';
+
+  static const String _getWidgetQuery = r'''
+  query getWidgets($projectId: Long!, $widgetId: Long!) {
+  user {
+    projectDashboard(projectId: $projectId) {
+      widget(id: $widgetId) {
         id,
         type,
         additionalInfo
@@ -45,9 +57,9 @@ class ProjectDashboardAdapter extends BaseNetworkAdapter {
     }
   }
 
-  Future<List<DashboardWidget>> getWidgets(int projectId) async {
+  Future<List<int>> getWidgetIds(int projectId) async {
     final QueryOptions options = QueryOptions(
-      document: gql(_getWidgetsQuery),
+      document: gql(_getWidgetIdsQuery),
       variables: {'projectId': projectId},
     );
 
@@ -56,12 +68,28 @@ class ProjectDashboardAdapter extends BaseNetworkAdapter {
     if (result.hasException) {
       return Future.error(result.exception!);
     } else {
-      List<dynamic> widgetsJson = result.data!['user']['projectDashboard']['widgets'];
-      List<DashboardWidget> widgets = List.empty(growable: true);
-      widgetsJson.forEach((element) {
-        widgets.add(DashboardWidget.fromJson(element));
+      List<dynamic> widgetIdsJson = result.data!['user']['projectDashboard']['widgets'];
+      List<int> widgetIds = List.empty(growable: true);
+      widgetIdsJson.forEach((element) {
+        widgetIds.add(element['id']);
       });
-      return Future.value(widgets);
+      return Future.value(widgetIds);
+    }
+  }
+
+  Future<DashboardWidget> getWidget(int projectId, int widgetId) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_getWidgetQuery),
+      variables: {'projectId': projectId, 'widgetId': widgetId},
+    );
+
+    final QueryResult result = await query(options);
+
+    if (result.hasException) {
+      return Future.error(result.exception!);
+    } else {
+      Map<String, dynamic> widgetJson = result.data!['user']['projectDashboard']['widget'];
+      return Future.value(DashboardWidget.fromJson(widgetJson));
     }
   }
 }
