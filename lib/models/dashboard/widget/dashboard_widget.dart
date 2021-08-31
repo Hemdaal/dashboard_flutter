@@ -8,5 +8,7 @@ class DashboardWidget {
 
   DashboardWidget.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        type = DashboardWidgetType.values.firstWhere((element) => element.toString() == json['type']);
+        type = DashboardWidgetType.values.firstWhere((element) {
+          return element.value == json['type'];
+        });
 }

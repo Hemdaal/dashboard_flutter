@@ -12,4 +12,13 @@ extension DashboardWidgetTypeExtension on DashboardWidgetType {
         return 'BUILD';
     }
   }
+
+  String get value {
+    switch (this) {
+      case DashboardWidgetType.COMMIT_BY_DAY:
+        return 'COMMIT_BY_DAY';
+      case DashboardWidgetType.BUILD:
+        return 'BUILD';
+    }
+  }
 }

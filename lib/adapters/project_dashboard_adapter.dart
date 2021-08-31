@@ -33,7 +33,7 @@ class ProjectDashboardAdapter extends BaseNetworkAdapter {
   Future<void> addWidget(int projectId, DashboardWidgetType widgetType) async {
     final QueryOptions options = QueryOptions(
       document: gql(_addWidgetQuery),
-      variables: {'projectId': projectId, 'type': widgetType, 'additionalInfo': null},
+      variables: {'projectId': projectId, 'type': widgetType.value, 'additionalInfo': null},
     );
 
     final QueryResult result = await query(options);
