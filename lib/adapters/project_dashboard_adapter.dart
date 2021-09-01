@@ -16,12 +16,13 @@ class ProjectDashboardAdapter extends BaseNetworkAdapter {
 }
   ''';
 
-  static const String _getWidgetIdsQuery = r'''
+  static const String _getWidgetsQuery = r'''
   query getWidgets($projectId: Long!) {
   user {
     projectDashboard(projectId: $projectId) {
       widgets {
-        id
+        id,
+        type
       }
     }
   }
@@ -57,9 +58,9 @@ class ProjectDashboardAdapter extends BaseNetworkAdapter {
     }
   }
 
-  Future<List<int>> getWidgetIds(int projectId) async {
+  Future<List<DashboardWidget>> getWidgets(int projectId) async {
     final QueryOptions options = QueryOptions(
-      document: gql(_getWidgetIdsQuery),
+      document: gql(_getWidgetsQuery),
       variables: {'projectId': projectId},
     );
 
@@ -68,12 +69,12 @@ class ProjectDashboardAdapter extends BaseNetworkAdapter {
     if (result.hasException) {
       return Future.error(result.exception!);
     } else {
-      List<dynamic> widgetIdsJson = result.data!['user']['projectDashboard']['widgets'];
-      List<int> widgetIds = List.empty(growable: true);
-      widgetIdsJson.forEach((element) {
-        widgetIds.add(element['id']);
+      List<dynamic> widgetsJson = result.data!['user']['projectDashboard']['widgets'];
+      List<DashboardWidget> widgets = List.empty(growable: true);
+      widgetsJson.forEach((element) {
+        widgets.add(DashboardWidget.fromJson(element));
       });
-      return Future.value(widgetIds);
+      return Future.value(widgets);
     }
   }
 

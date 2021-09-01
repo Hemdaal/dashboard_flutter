@@ -17,8 +17,8 @@ class ProjectDashboard {
     return this._dashboardAdapter.addWidget(_projectId, widgetType);
   }
 
-  Future<List<int>> getWidgetIds() {
-    return this._dashboardAdapter.getWidgetIds(_projectId);
+  Future<List<DashboardWidget>> getWidgets() {
+    return this._dashboardAdapter.getWidgets(_projectId);
   }
 
   Future<DashboardWidget> getWidget(int id) {

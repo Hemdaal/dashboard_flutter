@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hemdaal_ui_flutter/models/dashboard/widget/dashboard_widget.dart';
 import 'package:hemdaal_ui_flutter/models/dashboard/widget/dashboard_widget_type.dart';
 import 'package:hemdaal_ui_flutter/ui/components/dashboardWidgets/dashboard_widget.component.dart';
 import 'package:hemdaal_ui_flutter/utils/bloc.dart';
@@ -9,6 +10,8 @@ import 'package:hemdaal_ui_flutter/utils/fetch.dart';
 import 'project_dashboard_page.bloc.dart';
 
 class ProjectDashboardPage extends StatelessWidget {
+  final int _projectId;
+
   static String createRoute(int projectId) {
     return 'projects/${projectId.toString()}/dashboard';
   }
@@ -27,8 +30,8 @@ class ProjectDashboardPage extends StatelessWidget {
   final TextEditingController passwordFieldController = TextEditingController();
   final ProjectDashboardPageBloc _bloc;
 
-  ProjectDashboardPage(int projectId, {ProjectDashboardPageBloc? projectsPageBloc})
-      : this._bloc = projectsPageBloc ?? ProjectDashboardPageBloc(projectId);
+  ProjectDashboardPage(this._projectId, {ProjectDashboardPageBloc? projectsPageBloc})
+      : this._bloc = projectsPageBloc ?? ProjectDashboardPageBloc(_projectId);
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +43,8 @@ class ProjectDashboardPage extends StatelessWidget {
   Widget _render(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: StreamBuilder<Fetch<List<int>>>(
-              stream: _bloc.getDashboardWidgetIdsStream(),
+          child: StreamBuilder<Fetch<List<DashboardWidget>>>(
+              stream: _bloc.getDashboardWidgetsStream(),
               builder: (context, snapshot) {
                 if (snapshot.data?.isSuccess() == true) {
                   return _showDashboardWidgets(context, snapshot.getContent());
@@ -89,13 +92,13 @@ class ProjectDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _showDashboardWidgets(BuildContext context, List<int> dashboardWidgetIds) {
-    if (dashboardWidgetIds.isEmpty) {
+  Widget _showDashboardWidgets(BuildContext context, List<DashboardWidget> dashboardWidgets) {
+    if (dashboardWidgets.isEmpty) {
       return Text('No widgets found');
     } else {
       final List<Widget> widgets = [];
-      dashboardWidgetIds.forEach((widgetId) {
-        widgets.add(DashboardWidgetComponent(widgetId));
+      dashboardWidgets.forEach((dashboardWidget) {
+        widgets.add(DashboardWidgetComponent(dashboardWidget));
       });
       return SizedBox(
           width: 500,
